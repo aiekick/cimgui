@@ -34,6 +34,7 @@ set(IMGUI_SOURCES ../cimgui.cpp
 ../imgui/imgui_demo.cpp 
 ../imgui/imgui_widgets.cpp
 ../ImGuiFileDialog/ImGuiFileDialog.cpp
+../ImGuiFileDialog/ImGuiFileDialog.h
 ${TABLES_SOURCE} 
 )
 
