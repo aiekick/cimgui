@@ -5,6 +5,9 @@ set(CMAKE_SHARED_LIBRARY_PREFIX "")
 endif(WIN32)
 #general settings
 
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
 if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/../imgui/backends)
 	set(BAKENDS_FOLDER "../imgui/backends/")
@@ -21,12 +24,16 @@ endif()
 include_directories(../imgui)
 add_definitions("-DIMGUI_DISABLE_OBSOLETE_FUNCTIONS=1")
 
+include_directories(../ImGuiFileDialog)
+add_definitions(-DCUSTOM_IMGUIFILEDIALOG_CONFIG="../backend_test/CustomImGuiFileDialogConfig.h")
+
 include_directories(../)
 set(IMGUI_SOURCES ../cimgui.cpp 
 ../imgui/imgui.cpp 
 ../imgui/imgui_draw.cpp 
 ../imgui/imgui_demo.cpp 
 ../imgui/imgui_widgets.cpp
+../ImGuiFileDialog/ImGuiFileDialog.cpp
 ${TABLES_SOURCE} 
 )
 
@@ -90,7 +97,7 @@ target_link_libraries(cimgui_sdl ${IMGUI_LIBRARIES} ${IMGUI_SDL_LIBRARY})
 
 #using library
 include_directories(../generator/output/)
-add_executable(test_sdl main.c)
+add_executable(test_sdl main.c CustomFont.c)
 if (MINGW)
 target_link_options(test_sdl PRIVATE "-mconsole")
 endif()

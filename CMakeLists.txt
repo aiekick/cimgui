@@ -16,8 +16,13 @@ file(GLOB IMGUI_SOURCES
     imgui/imgui_draw.cpp
     imgui/imgui_demo.cpp
     imgui/imgui_widgets.cpp
+    ImGuiFileDialog/ImGuiFileDialog.cpp
 	${TABLES_SOURCE}
 )
+
+if(WIN32)
+    include_directories(${CMAKE_CURRENT_SOURCE_DIR}/ImGuiFileDialog/dirent/include)
+endif()
 
 set(IMGUI_STATIC "no" CACHE STRING "Build as a static library")
 set(IMGUI_FREETYPE "no" CACHE STRING "Build with freetype library")
