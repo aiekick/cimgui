@@ -188,12 +188,12 @@ int main(int argc, char* argv[])
             {
                 if (IGFD_IsOk(cfiledialog)) // result ok
                 {
-                    struct IGFD_String cfilePathName = IGFD_GetFilePathName(cfiledialog);
-                    printf("GetFilePathName : %s\n", cfilePathName.buffer);
-                    struct IGFD_String cfilePath = IGFD_GetCurrentPath(cfiledialog);
-                    printf("GetCurrentPath : %s\n", cfilePath.buffer);
-                    struct IGFD_String cfilter = IGFD_GetCurrentFilter(cfiledialog);
-                    printf("GetCurrentFilter : %s\n", cfilter.buffer);
+                    char* cfilePathName = IGFD_GetFilePathName(cfiledialog);
+                    printf("GetFilePathName : %s\n", cfilePathName);
+                    char* cfilePath = IGFD_GetCurrentPath(cfiledialog);
+                    printf("GetCurrentPath : %s\n", cfilePath);
+                    char* cfilter = IGFD_GetCurrentFilter(cfiledialog);
+                    printf("GetCurrentFilter : %s\n", cfilter);
                     // here convert from string because a string was passed as a userDatas, but it can be what you want
                     void* cdatas = IGFD_GetUserDatas(cfiledialog);
                     if (cdatas)
@@ -203,14 +203,15 @@ int main(int argc, char* argv[])
                     printf("Selection :\n");
                     for (int i = 0; i < (int)csel.count; i++)
                     {
-                        printf("(%i) FileName %s => path %s\n", i, csel.table[i].fileName.buffer, csel.table[i].filePathName.buffer);
+                        printf("(%i) FileName %s => path %s\n", i, csel.table[i].fileName, csel.table[i].filePathName);
                     }
                     // action
 
                     // destroy
-                    IGFD_String_DestroyContent(&cfilePathName);
-                    IGFD_String_DestroyContent(&cfilePath);
-                    IGFD_String_DestroyContent(&cfilter);
+                    if (cfilePathName) free(cfilePathName);
+                    if (cfilePath) free(cfilePath);
+                    if (cfilter) free(cfilter);
+
                     IGFD_Selection_DestroyContent(&csel);
                 }
                 IGFD_CloseDialog(cfiledialog);

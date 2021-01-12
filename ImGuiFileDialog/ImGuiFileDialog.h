@@ -762,19 +762,10 @@ typedef IGFD::FileDialog ImGuiFileDialog;
 
 	typedef void (*IGFD_PaneFun)(const char*, void*, bool*);
 
-	struct IGFD_String
-	{
-		char* buffer;	// 0
-		size_t size;	// 0U
-	};
-
-	IMGUIFILEDIALOG_API IGFD_String IGFD_String_Get(void);
-	IMGUIFILEDIALOG_API void IGFD_String_DestroyContent(IGFD_String *vString);
-	
 	struct IGFD_Selection_Pair
 	{
-		IGFD_String fileName;
-		IGFD_String filePathName;
+		char* fileName;
+		char* filePathName;
 	};
 
 	IMGUIFILEDIALOG_API IGFD_Selection_Pair IGFD_Selection_Pair_Get();
@@ -782,7 +773,7 @@ typedef IGFD::FileDialog ImGuiFileDialog;
 	
 	struct IGFD_Selection
 	{
-		struct IGFD_Selection_Pair* table;	// 0
+		IGFD_Selection_Pair* table;	// 0
 		size_t count;						// 0U
 	};
 
@@ -816,15 +807,15 @@ typedef IGFD::FileDialog ImGuiFileDialog;
 	IMGUIFILEDIALOG_API bool IGFD_IsOpened(ImGuiFileDialog* vContext, const char* vCurrentOpenedKey);			// say if the dialog is opened somewhere and can eturn the current opened key dialog
 
 	IMGUIFILEDIALOG_API IGFD_Selection IGFD_GetSelection(ImGuiFileDialog* vContext);						// Open File behavior : will return count selected items / selection struct give FileName and FilePathName
-	IMGUIFILEDIALOG_API IGFD_String IGFD_GetFilePathName(ImGuiFileDialog* vContext);						// Create File behavior : will always return the content of the field with current filter extention and current path
-	IMGUIFILEDIALOG_API IGFD_String IGFD_GetCurrentFileName(ImGuiFileDialog* vContext);					// Create File behavior : will always return the content of the field with current filter extention
-	IMGUIFILEDIALOG_API IGFD_String IGFD_GetCurrentPath(ImGuiFileDialog* vContext);						// will return current path
-	IMGUIFILEDIALOG_API IGFD_String IGFD_GetCurrentFilter(ImGuiFileDialog* vContext);					// get selected filter
+	IMGUIFILEDIALOG_API char* IGFD_GetFilePathName(ImGuiFileDialog* vContext);						// Create File behavior : will always return the content of the field with current filter extention and current path
+	IMGUIFILEDIALOG_API char* IGFD_GetCurrentFileName(ImGuiFileDialog* vContext);					// Create File behavior : will always return the content of the field with current filter extention
+	IMGUIFILEDIALOG_API char* IGFD_GetCurrentPath(ImGuiFileDialog* vContext);						// will return current path
+	IMGUIFILEDIALOG_API char* IGFD_GetCurrentFilter(ImGuiFileDialog* vContext);					// get selected filter
 	IMGUIFILEDIALOG_API void* IGFD_GetUserDatas(ImGuiFileDialog* vContext);										// get user datas send with Open Dialog
 
 	IMGUIFILEDIALOG_API void IGFD_SetExtentionInfos(ImGuiFileDialog* vContext, const char* vFilter, ImVec4 vColor, const char* vIcon);
 	IMGUIFILEDIALOG_API void IGFD_SetExtentionInfos2(ImGuiFileDialog* vContext, const char* vFilter, float vR, float vG, float vB, float vA, const char* vIcon);
-	IMGUIFILEDIALOG_API bool IGFD_GetExtentionInfos(ImGuiFileDialog* vContext, const char* vFilter, ImVec4* vOutColor, IGFD_String* vOutIcon);
+	IMGUIFILEDIALOG_API bool IGFD_GetExtentionInfos(ImGuiFileDialog* vContext, const char* vFilter, ImVec4* vOutColor, char** vOutIcon);
 	IMGUIFILEDIALOG_API void IGFD_ClearExtentionInfos(ImGuiFileDialog* vContext);
 
 #ifdef USE_EXPLORATION_BY_KEYS
@@ -832,7 +823,7 @@ typedef IGFD::FileDialog ImGuiFileDialog;
 #endif
 
 #ifdef USE_BOOKMARK
-	IMGUIFILEDIALOG_API IGFD_String IGFD_SerializeBookmarks(ImGuiFileDialog* vContext);
+	IMGUIFILEDIALOG_API char* IGFD_SerializeBookmarks(ImGuiFileDialog* vContext);
 	IMGUIFILEDIALOG_API void IGFD_DeserializeBookmarks(ImGuiFileDialog* vContext, const char* vBookmarks);
 #endif
 

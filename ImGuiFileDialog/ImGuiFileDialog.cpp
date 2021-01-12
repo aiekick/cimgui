@@ -2690,29 +2690,12 @@ namespace IGFD
 ///// C Interface ///////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////
 
-// Return an initialized IGFD_String
-IMGUIFILEDIALOG_API IGFD_String IGFD_String_Get(void)
-{
-	return { 0, 0U };
-}
-
-// destroy only the content of vString
-IMGUIFILEDIALOG_API void IGFD_String_DestroyContent(IGFD_String* vString)
-{
-	if (vString)
-	{
-		if (vString->buffer) 
-			delete[] vString->buffer;
-		vString->size = 0U;
-	}
-}
-
 // Return an initialized IGFD_Selection_Pair
 IMGUIFILEDIALOG_API IGFD_Selection_Pair IGFD_Selection_Pair_Get(void)
 {
 	IGFD_Selection_Pair res;
-	res.fileName = IGFD_String_Get();
-	res.filePathName = IGFD_String_Get();
+	res.fileName = 0;
+	res.filePathName = 0;
 	return res;
 }
 
@@ -2721,8 +2704,10 @@ IMGUIFILEDIALOG_API void IGFD_Selection_Pair_DestroyContent(IGFD_Selection_Pair*
 {
 	if (vSelection_Pair)
 	{
-		IGFD_String_DestroyContent(&vSelection_Pair->fileName);
-		IGFD_String_DestroyContent(&vSelection_Pair->filePathName);
+		if (vSelection_Pair->fileName)
+			delete[] vSelection_Pair->fileName;
+		if (vSelection_Pair->filePathName)
+			delete[] vSelection_Pair->filePathName;
 	}
 }
 
@@ -2866,19 +2851,19 @@ IMGUIFILEDIALOG_API IGFD_Selection IGFD_GetSelection(ImGuiFileDialog* vContext)
 				// fileName
 				if (!s.first.empty())
 				{
-					pair->fileName.size = s.first.size() + 1U;
-					pair->fileName.buffer = new char[pair->fileName.size];
-					strncpy(pair->fileName.buffer, s.first.c_str(), pair->fileName.size); // no need to use strncpy_s for MSVC here
-					pair->fileName.buffer[pair->fileName.size - 1U] = '\0';
+					size_t siz = s.first.size() + 1U;
+					pair->fileName = new char[siz];
+					strncpy(pair->fileName, s.first.c_str(), siz); // no need to use strncpy_s for MSVC here
+					pair->fileName[siz - 1U] = '\0';
 				}
 
 				// filePathName
 				if (!s.second.empty())
 				{
-					pair->filePathName.size = s.second.size() + 1U;
-					pair->filePathName.buffer = new char[pair->filePathName.size];
-					strncpy(pair->filePathName.buffer, s.second.c_str(), pair->filePathName.size); // no need to use strncpy_s for MSVC here
-					pair->filePathName.buffer[pair->filePathName.size - 1U] = '\0';
+					size_t siz = s.first.size() + 1U;
+					pair->filePathName = new char[siz];
+					strncpy(pair->filePathName, s.first.c_str(), siz); // no need to use strncpy_s for MSVC here
+					pair->filePathName[siz - 1U] = '\0';
 				}
 			}
 
@@ -2889,76 +2874,76 @@ IMGUIFILEDIALOG_API IGFD_Selection IGFD_GetSelection(ImGuiFileDialog* vContext)
 	return res;
 }
 
-IMGUIFILEDIALOG_API IGFD_String IGFD_GetFilePathName(ImGuiFileDialog* vContext)
+IMGUIFILEDIALOG_API char* IGFD_GetFilePathName(ImGuiFileDialog* vContext)
 {
-	IGFD_String res = IGFD_String_Get();
+	char* res = 0;
 
 	if (vContext)
 	{
 		auto s = vContext->GetFilePathName();
 		if (!s.empty())
 		{
-			res.size = s.size() + 1U;
-			res.buffer = new char[res.size];
-			strncpy(res.buffer, s.c_str(), res.size); // no need to use strncpy_s for MSVC here
-			res.buffer[res.size - 1U] = '\0';
+			size_t siz = s.size() + 1U;
+			res = new char[siz];
+			strncpy(res, s.c_str(), siz); // no need to use strncpy_s for MSVC here
+			res[siz - 1U] = '\0';
 		}
 	}
 
 	return res;
 }
 
-IMGUIFILEDIALOG_API IGFD_String IGFD_GetCurrentFileName(ImGuiFileDialog* vContext)
+IMGUIFILEDIALOG_API char* IGFD_GetCurrentFileName(ImGuiFileDialog* vContext)
 {
-	IGFD_String res = IGFD_String_Get();
+	char* res = 0;
 
 	if (vContext)
 	{
 		auto s = vContext->GetCurrentFileName();
 		if (!s.empty())
 		{
-			res.size = s.size() + 1U;
-			res.buffer = new char[res.size];
-			strncpy(res.buffer, s.c_str(), res.size); // no need to use strncpy_s for MSVC here
-			res.buffer[res.size - 1U] = '\0';
+			size_t siz = s.size() + 1U;
+			res = new char[siz];
+			strncpy(res, s.c_str(), siz); // no need to use strncpy_s for MSVC here
+			res[siz - 1U] = '\0';
 		}
 	}
 
 	return res;
 }
 
-IMGUIFILEDIALOG_API IGFD_String IGFD_GetCurrentPath(ImGuiFileDialog* vContext)
+IMGUIFILEDIALOG_API char* IGFD_GetCurrentPath(ImGuiFileDialog* vContext)
 {
-	IGFD_String res = IGFD_String_Get();
+	char* res = 0;
 
 	if (vContext)
 	{
 		auto s = vContext->GetCurrentPath();
 		if (!s.empty())
 		{
-			res.size = s.size() + 1U;
-			res.buffer = new char[res.size];
-			strncpy(res.buffer, s.c_str(), res.size); // no need to use strncpy_s for MSVC here
-			res.buffer[res.size - 1U] = '\0';
+			size_t siz = s.size() + 1U;
+			res = new char[siz];
+			strncpy(res, s.c_str(), siz); // no need to use strncpy_s for MSVC here
+			res[siz - 1U] = '\0';
 		}
 	}
 
 	return res;
 }
 
-IMGUIFILEDIALOG_API IGFD_String IGFD_GetCurrentFilter(ImGuiFileDialog* vContext)
+IMGUIFILEDIALOG_API char* IGFD_GetCurrentFilter(ImGuiFileDialog* vContext)
 {
-	IGFD_String res = IGFD_String_Get();
+	char* res = 0;
 
 	if (vContext)
 	{
 		auto s = vContext->GetCurrentFilter();
 		if (!s.empty())
 		{
-			res.size = s.size() + 1U;
-			res.buffer = new char[res.size];
-			strncpy(res.buffer, s.c_str(), res.size); // no need to use strncpy_s for MSVC here
-			res.buffer[res.size - 1U] = '\0';
+			size_t siz = s.size() + 1U;
+			res = new char[siz];
+			strncpy(res, s.c_str(), siz); // no need to use strncpy_s for MSVC here
+			res[siz - 1U] = '\0';
 		}
 	}
 
@@ -2994,7 +2979,7 @@ IMGUIFILEDIALOG_API void IGFD_SetExtentionInfos2(ImGuiFileDialog* vContext,
 }
 
 IMGUIFILEDIALOG_API bool IGFD_GetExtentionInfos(ImGuiFileDialog* vContext,
-	const char* vFilter, ImVec4* vOutColor, IGFD_String* vOutIcon)
+	const char* vFilter, ImVec4* vOutColor, char** vOutIcon)
 {
 	if (vContext)
 	{
@@ -3002,10 +2987,10 @@ IMGUIFILEDIALOG_API bool IGFD_GetExtentionInfos(ImGuiFileDialog* vContext,
 		bool res = vContext->GetExtentionInfos(vFilter, vOutColor, &icon);
 		if (!icon.empty() && vOutIcon)
 		{
-			vOutIcon->size = icon.size() + 1U;
-			vOutIcon->buffer = new char[vOutIcon->size];
-			strncpy(vOutIcon->buffer, icon.c_str(), vOutIcon->size); // no need to use strncpy_s for MSVC here
-			vOutIcon->buffer[vOutIcon->size - 1U] = '\0';
+			size_t siz = icon.size() + 1U;
+			*vOutIcon = new char[siz];
+			strncpy(*vOutIcon, icon.c_str(), siz); // no need to use strncpy_s for MSVC here
+			*vOutIcon[siz - 1U] = '\0';
 		}
 		return res;
 	}
@@ -3032,19 +3017,19 @@ IMGUIFILEDIALOG_API void IGFD_SetFlashingAttenuationInSeconds(ImGuiFileDialog* v
 #endif
 
 #ifdef USE_BOOKMARK
-IMGUIFILEDIALOG_API IGFD_String IGFD_SerializeBookmarks(ImGuiFileDialog* vContext)
+IMGUIFILEDIALOG_API char* IGFD_SerializeBookmarks(ImGuiFileDialog* vContext)
 {
-	IGFD_String res = IGFD_String_Get();
+	char *res = 0;
 	
 	if (vContext)
 	{
 		auto s = vContext->SerializeBookmarks();
 		if (!s.empty())
 		{
-			res.size = s.size() + 1U;
-			res.buffer = new char[res.size];
-			strncpy(res.buffer, s.c_str(), res.size); // no need to use strncpy_s for MSVC here
-			res.buffer[res.size - 1U] = '\0';
+			size_t siz = s.size() + 1U;
+			res = new char[siz];
+			strncpy(res, s.c_str(), siz); // no need to use strncpy_s for MSVC here
+			res[siz - 1U] = '\0';
 		}
 	}
 
