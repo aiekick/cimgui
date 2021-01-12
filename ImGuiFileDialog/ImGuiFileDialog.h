@@ -119,7 +119,7 @@ In this mode you can select any directory with one click, and open directory wit
 
 Example code :
 static bool canValidateDialog = false;
-inline void InfosPane(std::string vFilter, igfd::UserDatas vUserDatas, bool *vCantContinue) // if vCantContinue is false, the user cant validate the dialog
+inline void InfosPane(std::string& vFilter, igfd::UserDatas vUserDatas, bool *vCantContinue) // if vCantContinue is false, the user cant validate the dialog
 {
 	ImGui::TextColored(ImVec4(0, 1, 1, 1), "Infos Pane");
 	ImGui::Text("Selected Filter : %s", vFilter.c_str());
@@ -450,7 +450,7 @@ namespace IGFD
 		ImVec4 color = ImVec4(0, 0, 0, 0);
 		std::string icon;
 		FileExtentionInfosStruct() : color(0, 0, 0, 0) { }
-		FileExtentionInfosStruct(ImVec4 vColor, std::string vIcon = std::string()) { color = vColor; icon = vIcon; }
+		FileExtentionInfosStruct(const ImVec4& vColor, const std::string& vIcon = "") { color = vColor; icon = vIcon; }
 	};
 
 	typedef void* UserDatas;
@@ -541,7 +541,7 @@ namespace IGFD
 
 		std::string dlg_key;
 		std::string dlg_name;
-		const char* dlg_filters{};
+		std::string dlg_filters{};
 		std::string dlg_path;
 		std::string dlg_defaultFileName;
 		std::string dlg_defaultExt;
@@ -591,46 +591,46 @@ namespace IGFD
 		~FileDialog();
 
 		// standard dialog
-		void OpenDialog(const char* vKey, const char* vName, const char* vFilters,
-			const char* vPath, const char* vDefaultFileName,
+		void OpenDialog(const std::string& vKey, const std::string& vName, const std::string& vFilters,
+			const std::string& vPath, const std::string& vDefaultFileName,
 			const PaneFun& vOptionsPane, const float&  vOptionsPaneWidth = 250.0f,
 			const int& vCountSelectionMax = 1, UserDatas vUserDatas = nullptr, ImGuiFileDialogFlags flags = 0);
-		void OpenDialog(const char* vKey, const char* vName, const char* vFilters,
-			const char* vDefaultFileName,
+		void OpenDialog(const std::string& vKey, const std::string& vName, const std::string& vFilters,
+			const std::string& vDefaultFileName,
 			const PaneFun& vOptionsPane, const float&  vOptionsPaneWidth = 250.0f,
 			const int& vCountSelectionMax = 1, UserDatas vUserDatas = nullptr, ImGuiFileDialogFlags flags = 0);
-		void OpenDialog(const char* vKey, const char* vName, const char* vFilters,
-			const char* vPath, const char* vDefaultFileName,
+		void OpenDialog(const std::string& vKey, const std::string& vName, const std::string& vFilters,
+			const std::string& vPath, const std::string& vDefaultFileName,
 			const int& vCountSelectionMax = 1, UserDatas vUserDatas = nullptr, ImGuiFileDialogFlags flags = 0);
-		void OpenDialog(const char* vKey, const char* vName, const char* vFilters,
-			const char* vFilePathName, const int& vCountSelectionMax = 1,
+		void OpenDialog(const std::string& vKey, const std::string& vName, const std::string& vFilters,
+			const std::string& vFilePathName, const int& vCountSelectionMax = 1,
 			UserDatas vUserDatas = nullptr, ImGuiFileDialogFlags flags = 0);
 
 		// modal dialog
-		void OpenModal(const char* vKey, const char* vName, const char* vFilters,
-			const char* vPath, const char* vDefaultFileName,
+		void OpenModal(const std::string& vKey, const std::string& vName, const std::string& vFilters,
+			const std::string& vPath, const std::string& vDefaultFileName,
 			const PaneFun& vOptionsPane, const float&  vOptionsPaneWidth = 250.0f,
 			const int& vCountSelectionMax = 1, UserDatas vUserDatas = nullptr, ImGuiFileDialogFlags flags = 0);
-		void OpenModal(const char* vKey, const char* vName, const char* vFilters,
-			const char* vDefaultFileName,
+		void OpenModal(const std::string& vKey, const std::string& vName, const std::string& vFilters,
+			const std::string& vDefaultFileName,
 			const PaneFun& vOptionsPane, const float&  vOptionsPaneWidth = 250.0f,
 			const int& vCountSelectionMax = 1, UserDatas vUserDatas = nullptr, ImGuiFileDialogFlags flags = 0);
-		void OpenModal(const char* vKey, const char* vName, const char* vFilters,
-			const char* vPath, const char* vDefaultFileName,
+		void OpenModal(const std::string& vKey, const std::string& vName, const std::string& vFilters,
+			const std::string& vPath, const std::string& vDefaultFileName,
 			const int& vCountSelectionMax = 1, UserDatas vUserDatas = nullptr, ImGuiFileDialogFlags flags = 0);
-		void OpenModal(const char* vKey, const char* vName, const char* vFilters,
-			const char* vFilePathName, const int& vCountSelectionMax = 1,
+		void OpenModal(const std::string& vKey, const std::string& vName, const std::string& vFilters,
+			const std::string& vFilePathName, const int& vCountSelectionMax = 1,
 			UserDatas vUserDatas = nullptr, ImGuiFileDialogFlags flags = 0);
 
 		// Display / Close dialog form
-		bool Display(const char* vKey, ImGuiWindowFlags vFlags = ImGuiWindowFlags_NoCollapse,
+		bool Display(const std::string& vKey, ImGuiWindowFlags vFlags = ImGuiWindowFlags_NoCollapse,
 			ImVec2 vMinSize = ImVec2(0, 0), ImVec2 vMaxSize = ImVec2(FLT_MAX, FLT_MAX));
 		void Close();
 
 		// queries
-		bool WasOpenedThisFrame(const char* vKey);				// say if the dialog key was already opened this frame
+		bool WasOpenedThisFrame(const std::string& vKey);				// say if the dialog key was already opened this frame
 		bool WasOpenedThisFrame();								// say if the dialog was already opened this frame
-		bool IsOpened(const char* vKey);						// say if the key is opened
+		bool IsOpened(const std::string& vKey);						// say if the key is opened
 		bool IsOpened();										// say if the dialog is opened somewhere	
 		std::string GetOpenedKey();								// return the dialog key who is opened, return nothing if not opened
 
@@ -644,9 +644,9 @@ namespace IGFD
 		UserDatas GetUserDatas();							// get user datas send with Open Dialog
 		
 		// extentions displaying
-		void SetExtentionInfos(const char* vFilter, const FileExtentionInfosStruct& vInfos);
-		void SetExtentionInfos(const char* vFilter, const ImVec4& vColor, std::string vIcon = "");
-		bool GetExtentionInfos(const char* vFilter, ImVec4 *vColor, std::string* vIcon = 0);		// return true is extention exist
+		void SetExtentionInfos(const std::string& vFilter, const FileExtentionInfosStruct& vInfos);
+		void SetExtentionInfos(const std::string& vFilter, const ImVec4& vColor, const std::string& vIcon = "");
+		bool GetExtentionInfos(const std::string& vFilter, ImVec4 *vColor, std::string* vIcon = 0);		// return true is extention exist
 		void ClearExtentionInfos();
 
 #ifdef USE_EXPLORATION_BY_KEYS
@@ -691,9 +691,9 @@ namespace IGFD
 		bool CreateDir(const std::string& vPath);
 		std::string ComposeNewPath(std::vector<std::string>::iterator vIter);
 		void GetDrives();
-		void ParseFilters(const char *vFilters);
+		void ParseFilters(const std::string& vFilters);
 		void SetSelectedFilterWithExt(const std::string& vFilter);
-		static std::string OptimizeFilenameForSearchOperations(std::string vFileName);
+		static std::string OptimizeFilenameForSearchOperations(std::string& vFileName);
 
 		// filtering
 	    void ApplyFilteringOnFileList();
@@ -707,7 +707,8 @@ namespace IGFD
 		void LocateByInputKey();
 		bool LocateItem_Loop(ImWchar vC);
 		void ExploreWithkeys();
-		static bool FlashableSelectable(const char* label, bool selected = false, ImGuiSelectableFlags flags = 0,
+		static bool FlashableSelectable(
+			const char* label, bool selected = false, ImGuiSelectableFlags flags = 0,
 			bool vFlashing = false, const ImVec2& size = ImVec2(0, 0));
 		void StartFlashItem(size_t vIdx);
 		bool BeginFlashItem(size_t vIdx);
@@ -735,13 +736,30 @@ typedef IGFD::FileDialog ImGuiFileDialog;
 	};
 #endif // __cplusplus
 
-	// access functions
-#ifdef __cplusplus
-#define IMGUIFILEDIALOG_API extern "C"
+// C Interface
+
+#include <stdint.h>
+
+#if defined _WIN32 || defined __CYGWIN__
+	#ifdef IMGUIFILEDIALOG_NO_EXPORT
+		#define API
+	#else
+		#define API __declspec(dllexport)
+	#endif
 #else
-#define IMGUIFILEDIALOG_API
+	#ifdef __GNUC__
+		#define API  __attribute__((__visibility__("default")))
+	#else
+		#define API
+	#endif
 #endif
-	
+
+#ifdef __cplusplus
+	#define IMGUIFILEDIALOG_API extern "C" API 
+#else
+	#define IMGUIFILEDIALOG_API
+#endif
+
 	typedef void (*IGFD_PaneFun)(const char*, void*, bool*);
 
 	struct IGFD_String

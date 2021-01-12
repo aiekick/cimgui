@@ -98,10 +98,10 @@ int main(int argc, char* argv[])
     ImFontConfig_destroy(icons_config);
 
     // create ImGuiFileDialog
-    //ImGuiFileDialog* cfiledialog = IGFD_Create();
+    ImGuiFileDialog* cfiledialog = IGFD_Create();
     // define some files color
-    //IGFD_SetExtentionInfos2(cfiledialog, ".c", 1.0f, 1.0f, 0.0f, 0.9f, "");
-    //IGFD_SetExtentionInfos2(cfiledialog, ".h", 0.2f, 1.0f, 0.0f, 0.9f, "");
+    IGFD_SetExtentionInfos2(cfiledialog, ".c", 1.0f, 1.0f, 0.0f, 0.9f, "");
+    IGFD_SetExtentionInfos2(cfiledialog, ".h", 0.2f, 1.0f, 0.0f, 0.9f, "");
 
     struct IGFD_String res = IGFD_String_Get();
 
@@ -156,7 +156,7 @@ int main(int argc, char* argv[])
 
             if (igButton("Open File", buttonSize))
             {
-               /* IGFD_OpenDialog(cfiledialog, 
+                IGFD_OpenDialog(cfiledialog, 
                     "filedlg",                              // dialog key (make it possible to have different treatment reagrding the dialog key
                     "Open a File",                          // dialog title
                     "c files(*.c/*.h){.c,.h}",              // dialog filter syntax : simple => .h,.c,.pp, etc and collections : text1{filter0,filter1,filter2}, text2{filter0,filter1,filter2}, etc..
@@ -166,7 +166,7 @@ int main(int argc, char* argv[])
                     0.0f,                                   // base width of the pane
                     0,                                      // count selection : 0 infinite, 1 one file (default), n (n files)
                     "User data !",                          // some user datas
-                    ImGuiFileDialogFlags_ConfirmOverwrite); // ImGuiFileDialogFlags*/
+                    ImGuiFileDialogFlags_ConfirmOverwrite); // ImGuiFileDialogFlags
             }
 
             if (igButton("Button", buttonSize))
@@ -186,7 +186,7 @@ int main(int argc, char* argv[])
             minSize.y = maxSize.y * 0.25f;
             
             // display dialog
-            /*if (IGFD_DisplayDialog(cfiledialog, "filedlg", ImGuiWindowFlags_NoCollapse, minSize, maxSize))
+            if (IGFD_DisplayDialog(cfiledialog, "filedlg", ImGuiWindowFlags_NoCollapse, minSize, maxSize))
             {
                 if (IGFD_IsOk(cfiledialog)) // result ok
                 {
@@ -216,7 +216,7 @@ int main(int argc, char* argv[])
                     IGFD_Selection_DestroyContent(&csel);
                 }
                 IGFD_CloseDialog(cfiledialog);
-            }*/
+            }
         }
 
         if (showAnotherWindow)
@@ -253,7 +253,7 @@ int main(int argc, char* argv[])
     }
 
     // destroy ImGuiFileDialog
-    //IGFD_Destroy(cfiledialog);
+    IGFD_Destroy(cfiledialog);
 
     // clean up
     ImGui_ImplOpenGL3_Shutdown();

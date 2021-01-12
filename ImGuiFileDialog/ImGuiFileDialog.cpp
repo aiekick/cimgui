@@ -284,7 +284,7 @@ namespace IGFD
 #undef maxi
 		if (countChars > 0)
 		{
-			std::string var = std::string(lpBuffer, (size_t)countChars);
+			std::string& var = std::string(lpBuffer, (size_t)countChars);
 			replaceString(var, "\\", "");
 			res = splitStringToVector(var, '\0', false);
 		}
@@ -580,8 +580,9 @@ namespace IGFD
 	///// STANDARD DIALOG ////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 
-	void IGFD::FileDialog::OpenDialog(const char* vKey, const char* vName, const char* vFilters,
-		const char* vPath, const char* vDefaultFileName,
+	void IGFD::FileDialog::OpenDialog(
+		const std::string& vKey, const std::string& vName, const std::string& vFilters,
+		const std::string& vPath, const std::string& vDefaultFileName,
 		const PaneFun& vOptionsPane, const float& vOptionsPaneWidth,
 		const int& vCountSelectionMax, UserDatas vUserDatas, ImGuiFileDialogFlags vFlags)
 	{
@@ -610,8 +611,8 @@ namespace IGFD
 #endif
 	}
 
-	void IGFD::FileDialog::OpenDialog(const char* vKey, const char* vName, const char* vFilters,
-		const char* vFilePathName,
+	void IGFD::FileDialog::OpenDialog(
+		const std::string& vKey, const std::string& vName, const std::string& vFilters,	const std::string& vFilePathName,
 		const PaneFun& vOptionsPane, const float& vOptionsPaneWidth,
 		const int& vCountSelectionMax, UserDatas vUserDatas, ImGuiFileDialogFlags vFlags)
 	{
@@ -653,8 +654,8 @@ namespace IGFD
 #endif
 	}
 
-	void IGFD::FileDialog::OpenDialog(const char* vKey, const char* vName, const char* vFilters,
-		const char* vFilePathName, const int& vCountSelectionMax,
+	void IGFD::FileDialog::OpenDialog(const std::string& vKey, const std::string& vName, const std::string& vFilters,
+		const std::string& vFilePathName, const int& vCountSelectionMax,
 		UserDatas vUserDatas, ImGuiFileDialogFlags vFlags)
 	{
 		if (m_ShowDialog) // if already opened, quit
@@ -695,8 +696,8 @@ namespace IGFD
 #endif
 	}
 
-	void IGFD::FileDialog::OpenDialog(const char* vKey, const char* vName, const char* vFilters,
-		const char* vPath, const char* vDefaultFileName, const int& vCountSelectionMax,
+	void IGFD::FileDialog::OpenDialog(const std::string& vKey, const std::string& vName, const std::string& vFilters,
+		const std::string& vPath, const std::string& vDefaultFileName, const int& vCountSelectionMax,
 		UserDatas vUserDatas, ImGuiFileDialogFlags vFlags)
 	{
 		if (m_ShowDialog) // if already opened, quit
@@ -729,8 +730,8 @@ namespace IGFD
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 
 	void IGFD::FileDialog::OpenModal(
-		const char* vKey, const char* vName, const char* vFilters,
-		const char* vPath, const char* vDefaultFileName,
+		const std::string& vKey, const std::string& vName, const  std::string& vFilters,
+		const std::string& vPath, const std::string& vDefaultFileName,
 		const PaneFun& vOptionsPane, const float& vOptionsPaneWidth,
 		const int& vCountSelectionMax, UserDatas vUserDatas, ImGuiFileDialogFlags vFlags)
 	{
@@ -746,8 +747,8 @@ namespace IGFD
 	}
 
 	void IGFD::FileDialog::OpenModal(
-		const char* vKey, const char* vName, const char* vFilters,
-		const char* vFilePathName,
+		const std::string& vKey, const std::string& vName, const std::string& vFilters,
+		const std::string& vFilePathName,
 		const PaneFun& vOptionsPane, const float& vOptionsPaneWidth,
 		const int& vCountSelectionMax, UserDatas vUserDatas, ImGuiFileDialogFlags vFlags)
 	{
@@ -763,8 +764,8 @@ namespace IGFD
 	}
 
 	void IGFD::FileDialog::OpenModal(
-		const char* vKey, const char* vName, const char* vFilters,
-		const char* vFilePathName, const int& vCountSelectionMax,
+		const std::string& vKey, const std::string& vName, const std::string& vFilters,
+		const std::string& vFilePathName, const int& vCountSelectionMax,
 		UserDatas vUserDatas, ImGuiFileDialogFlags vFlags)
 	{
 		if (m_ShowDialog) // if already opened, quit
@@ -778,8 +779,8 @@ namespace IGFD
 	}
 
 	void IGFD::FileDialog::OpenModal(
-		const char* vKey, const char* vName, const char* vFilters,
-		const char* vPath, const char* vDefaultFileName, const int& vCountSelectionMax,
+		const std::string& vKey, const std::string& vName, const std::string& vFilters,
+		const std::string& vPath, const std::string& vDefaultFileName, const int& vCountSelectionMax,
 		UserDatas vUserDatas, ImGuiFileDialogFlags vFlags)
 	{
 		if (m_ShowDialog) // if already opened, quit
@@ -796,7 +797,7 @@ namespace IGFD
 	///// MAIN FUNCTION //////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 
-	bool IGFD::FileDialog::Display(const char* vKey, ImGuiWindowFlags vFlags, ImVec2 vMinSize, ImVec2 vMaxSize)
+	bool IGFD::FileDialog::Display(const std::string& vKey, ImGuiWindowFlags vFlags, ImVec2 vMinSize, ImVec2 vMaxSize)
 	{
 		if (m_ShowDialog && dlg_key == vKey)
 		{
@@ -940,7 +941,7 @@ namespace IGFD
 	{
 		float posY = ImGui::GetCursorPos().y; // height of last bar calc
 
-		if (dlg_filters)
+		if (!dlg_filters.empty())
 			ImGui::Text(fileNameString);
 		else // directory chooser
 			ImGui::Text(dirNameString);
@@ -949,14 +950,14 @@ namespace IGFD
 
 		// Input file fields
 		float width = ImGui::GetContentRegionAvail().x;
-		if (dlg_filters)
+		if (!dlg_filters.empty())
 			width -= FILTER_COMBO_WIDTH;
 		ImGui::PushItemWidth(width);
 		ImGui::InputText("##FileName", FileNameBuffer, MAX_FILE_DIALOG_NAME_BUFFER);
 		ImGui::PopItemWidth();
 
 		// combobox of filters
-		if (dlg_filters)
+		if (!dlg_filters.empty())
 		{
 			ImGui::SameLine();
 
@@ -1231,7 +1232,7 @@ namespace IGFD
 
 						ImVec4 c;
 						std::string icon;
-						bool showColor = GetExtentionInfos(infos.ext.c_str(), &c, &icon);
+						bool showColor = GetExtentionInfos(infos.ext, &c, &icon);
 						if (showColor)
 							ImGui::PushStyleColor(ImGuiCol_Text, c);
 
@@ -1272,7 +1273,7 @@ namespace IGFD
 							{
 								if (infos.type == 'd')
 								{
-									if (dlg_filters || ImGui::IsMouseDoubleClicked(0))
+									if (!dlg_filters.empty() || ImGui::IsMouseDoubleClicked(0))
 									{
 										m_PathClicked = SelectDirectory(infos);
 									}
@@ -1370,7 +1371,7 @@ namespace IGFD
 		m_ShowDialog = false;
 	}
 
-	bool IGFD::FileDialog::WasOpenedThisFrame(const char* vKey)
+	bool IGFD::FileDialog::WasOpenedThisFrame(const std::string& vKey)
 	{
 		bool res = m_ShowDialog && dlg_key == vKey;
 		if (res)
@@ -1392,7 +1393,7 @@ namespace IGFD
 		return res;
 	}
 
-	bool IGFD::FileDialog::IsOpened(const char* vKey)
+	bool IGFD::FileDialog::IsOpened(const std::string& vKey)
 	{
 		return (m_ShowDialog && dlg_key == vKey);
 	}
@@ -1483,17 +1484,17 @@ namespace IGFD
 		return res;
 	}
 
-	void IGFD::FileDialog::SetExtentionInfos(const char* vFilter, const FileExtentionInfosStruct& vInfos)
+	void IGFD::FileDialog::SetExtentionInfos(const std::string& vFilter, const FileExtentionInfosStruct& vInfos)
 	{
 		m_FileExtentionInfos[vFilter] = vInfos;
 	}
 
-	void IGFD::FileDialog::SetExtentionInfos(const char* vFilter, const ImVec4& vColor, std::string vIcon)
+	void IGFD::FileDialog::SetExtentionInfos(const std::string& vFilter, const ImVec4& vColor, const std::string& vIcon)
 	{
 		m_FileExtentionInfos[vFilter] = FileExtentionInfosStruct(vColor, vIcon);
 	}
 
-	bool IGFD::FileDialog::GetExtentionInfos(const char* vFilter, ImVec4* vOutColor, std::string* vOutIcon)
+	bool IGFD::FileDialog::GetExtentionInfos(const std::string& vFilter, ImVec4* vOutColor, std::string* vOutIcon)
 	{
 		if (vOutColor)
 		{
@@ -1961,7 +1962,7 @@ namespace IGFD
 								infos.ext = infos.fileName.substr(lpt);
 							}
 
-							if (dlg_filters)
+							if (!dlg_filters.empty())
 							{
 								// check if current file extention is covered by current filter
 								// we do that here, for avoid doing taht during filelist display
@@ -2119,14 +2120,12 @@ namespace IGFD
 		}
 	}
 
-	void IGFD::FileDialog::ParseFilters(const char* vFilters)
+	void IGFD::FileDialog::ParseFilters(const std::string& vFilters)
 	{
 		m_Filters.clear();
 
-		if (vFilters)
+		if (!vFilters.empty())
 		{
-			std::string fullStr = vFilters;
-
 			// ".*,.cpp,.h,.hpp"
 			// "Source files{.cpp,.h,.hpp},Image files{.png,.gif,.jpg,.jpeg},.md"
 
@@ -2134,18 +2133,18 @@ namespace IGFD
 
 			size_t nan = std::string::npos;
 			size_t p = 0, lp = 0;
-			while ((p = fullStr.find_first_of("{,", p)) != nan)
+			while ((p = vFilters.find_first_of("{,", p)) != nan)
 			{
 				FilterInfosStruct infos;
 
-				if (fullStr[p] == '{') // {
+				if (vFilters[p] == '{') // {
 				{
-					infos.filter = fullStr.substr(lp, p - lp);
+					infos.filter = vFilters.substr(lp, p - lp);
 					p++;
-					lp = fullStr.find('}', p);
+					lp = vFilters.find('}', p);
 					if (lp != nan)
 					{
-						std::string fs = fullStr.substr(p, lp - p);
+						std::string fs = vFilters.substr(p, lp - p);
 						auto arr = splitStringToVector(fs, ',', false);
 						for (auto a : arr)
 						{
@@ -2156,7 +2155,7 @@ namespace IGFD
 				}
 				else // ,
 				{
-					infos.filter = fullStr.substr(lp, p - lp);
+					infos.filter = vFilters.substr(lp, p - lp);
 					p++;
 				}
 
@@ -2171,7 +2170,7 @@ namespace IGFD
 					m_Filters.emplace_back(infos);
 			}
 
-			std::string token = fullStr.substr(lp);
+			std::string token = vFilters.substr(lp);
 			if (!token.empty())
 			{
 				FilterInfosStruct infos;
@@ -2218,7 +2217,7 @@ namespace IGFD
 		}
 	}
 
-	std::string IGFD::FileDialog::OptimizeFilenameForSearchOperations(std::string vFileName)
+	std::string IGFD::FileDialog::OptimizeFilenameForSearchOperations(std::string& vFileName)
 	{
 		// convert to lower case
 		for (char& c : vFileName)
@@ -2244,7 +2243,7 @@ namespace IGFD
 				show = false;
 			}
 
-			if (!dlg_filters && infos.type != 'd') // directory mode
+			if (dlg_filters.empty() && infos.type != 'd') // directory mode
 			{
 				show = false;
 			}
@@ -2867,17 +2866,19 @@ IMGUIFILEDIALOG_API IGFD_Selection IGFD_GetSelection(ImGuiFileDialog* vContext)
 				// fileName
 				if (!s.first.empty())
 				{
-					pair->fileName.size = s.first.size();
+					pair->fileName.size = s.first.size() + 1U;
 					pair->fileName.buffer = new char[pair->fileName.size];
 					strncpy(pair->fileName.buffer, s.first.c_str(), pair->fileName.size); // no need to use strncpy_s for MSVC here
+					pair->fileName.buffer[pair->fileName.size - 1U] = '\0';
 				}
 
 				// filePathName
 				if (!s.second.empty())
 				{
-					pair->filePathName.size = s.second.size();
+					pair->filePathName.size = s.second.size() + 1U;
 					pair->filePathName.buffer = new char[pair->filePathName.size];
 					strncpy(pair->filePathName.buffer, s.second.c_str(), pair->filePathName.size); // no need to use strncpy_s for MSVC here
+					pair->filePathName.buffer[pair->filePathName.size - 1U] = '\0';
 				}
 			}
 
