@@ -43,3 +43,4 @@ build/
 /backend_test/.idea
 /backend_test/build
 /backend_test/cmake-build-debug
+/generator/*.exp
