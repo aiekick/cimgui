@@ -103,8 +103,6 @@ int main(int argc, char* argv[])
     IGFD_SetExtentionInfos2(cfiledialog, ".c", 1.0f, 1.0f, 0.0f, 0.9f, "");
     IGFD_SetExtentionInfos2(cfiledialog, ".h", 0.2f, 1.0f, 0.0f, 0.9f, "");
 
-    struct IGFD_String res = IGFD_String_Get();
-
     bool showDemoWindow = true;
     bool showAnotherWindow = false;
     ImVec4 clearColor;

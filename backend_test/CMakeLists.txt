@@ -1,5 +1,5 @@
 Project(cimgui_sdl)
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.1)
 if(WIN32) #to mingw work as all the others
 set(CMAKE_SHARED_LIBRARY_PREFIX "")
 endif(WIN32)
@@ -15,11 +15,15 @@ else()
 	set(BAKENDS_FOLDER "../imgui/examples/")
 endif()
 
+message(STATUS "BAKENDS_FOLDER : ${BAKENDS_FOLDER}")
+
 if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/../imgui/imgui_tables.cpp)
 	set(TABLES_SOURCE "../imgui/imgui_tables.cpp")
 else()
 	set(TABLES_SOURCE "")
 endif()
+
+message(STATUS "TABLES_SOURCE : ${TABLES_SOURCE}")
 
 include_directories(../imgui)
 add_definitions("-DIMGUI_DISABLE_OBSOLETE_FUNCTIONS=1")
@@ -34,7 +38,6 @@ set(IMGUI_SOURCES ../cimgui.cpp
 ../imgui/imgui_demo.cpp 
 ../imgui/imgui_widgets.cpp
 ../ImGuiFileDialog/ImGuiFileDialog.cpp
-../ImGuiFileDialog/ImGuiFileDialog.h
 ${TABLES_SOURCE} 
 )
 
@@ -75,8 +78,10 @@ list(APPEND IMGUI_SOURCES ${BAKENDS_FOLDER}imgui_impl_sdl.cpp)
 if(DEFINED SDL_PATH)
 	message(STATUS "SDL_PATH defined as " ${SDL_PATH})
 	FIND_PACKAGE(SDL2 REQUIRED PATHS ${SDL_PATH})
-	get_target_property(SDL_INCLUDE SDL2::SDL2 INTERFACE_INCLUDE_DIRECTORIES)
-	message(STATUS "sdlinclude is " ${SDL_INCLUDE})
+	message(STATUS "SDL2_LIBRARIES defined as " ${SDL2_LIBRARIES})
+	message(STATUS "SDL_INCLUDE defined as " ${SDL_INCLUDE})
+	message(STATUS "SDL2_DLL defined as " ${SDL2_DLL})
+	##get_target_property(SDL_INCLUDE SDL2::SDL2 INTERFACE_INCLUDE_DIRECTORIES)
 	if ("${SDL_INCLUDE}" STREQUAL "" OR "${SDL_INCLUDE}" STREQUAL "SDL_INCLUDE-NOTFOUND") #if not found latest SDL2 cmake config use older
 		message(STATUS "sdlinclude2 is " ${SDL2_INCLUDE_DIRS})
 		include_directories(${SDL2_INCLUDE_DIRS})
@@ -95,6 +100,9 @@ endif(DEFINED SDL_PATH)
 
 add_library(cimgui_sdl SHARED ${IMGUI_SOURCES})
 target_link_libraries(cimgui_sdl ${IMGUI_LIBRARIES} ${IMGUI_SDL_LIBRARY})
+
+ #copy dll
+add_custom_command ( TARGET cimgui_sdl POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SDL2_DLL} ${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
 
 #using library
 include_directories(../generator/output/)
