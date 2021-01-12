@@ -7,17 +7,17 @@
 
 #define USE_IMGUI_TABLES
 
-//#include <GLFW/glfw3.h>
+#include "SDL_scancode.h"
 
-//#define USE_EXPLORATION_BY_KEYS
+#define USE_EXPLORATION_BY_KEYS
 // Up key for explore to the top
-//#define IGFD_KEY_UP GLFW_KEY_UP
+#define IGFD_KEY_UP SDL_SCANCODE_UP
 // Down key for explore to the bottom
-//#define IGFD_KEY_DOWN GLFW_KEY_DOWN
+#define IGFD_KEY_DOWN SDL_SCANCODE_DOWN
 // Enter key for open directory
-//#define IGFD_KEY_ENTER GLFW_KEY_ENTER
+#define IGFD_KEY_ENTER SDL_SCANCODE_RETURN
 // BackSpace for comming back to the last directory
-//#define IGFD_KEY_BACKSPACE GLFW_KEY_BACKSPACE
+#define IGFD_KEY_BACKSPACE SDL_SCANCODE_BACKSPACE
 
 // widget
 // filter combobox width

@@ -284,7 +284,7 @@ namespace IGFD
 #undef maxi
 		if (countChars > 0)
 		{
-			std::string& var = std::string(lpBuffer, (size_t)countChars);
+			std::string var = std::string(lpBuffer, (size_t)countChars);
 			replaceString(var, "\\", "");
 			res = splitStringToVector(var, '\0', false);
 		}
@@ -2286,7 +2286,7 @@ namespace IGFD
 
 				if (infos->type == 'd')
 				{
-					if (!dlg_filters) // directory chooser
+					if (dlg_filters.empty()) // directory chooser
 					{
 						SelectFileName(*infos);
 					}
@@ -2385,7 +2385,7 @@ namespace IGFD
 
 				if (infos->type == 'd')
 				{
-					if (dlg_filters || enterInDirectory)
+					if (!dlg_filters.empty() || enterInDirectory)
 					{
 						if (enterInDirectory)
 						{

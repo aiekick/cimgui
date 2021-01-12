@@ -38,6 +38,7 @@ set(IMGUI_SOURCES ../cimgui.cpp
 ../imgui/imgui_demo.cpp 
 ../imgui/imgui_widgets.cpp
 ../ImGuiFileDialog/ImGuiFileDialog.cpp
+../ImGuiFileDialog/ImGuiFileDialog.h
 ${TABLES_SOURCE} 
 )
 
@@ -104,9 +105,13 @@ target_link_libraries(cimgui_sdl ${IMGUI_LIBRARIES} ${IMGUI_SDL_LIBRARY})
  #copy dll
 add_custom_command ( TARGET cimgui_sdl POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SDL2_DLL} ${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
 
+file(GLOB SRC_TREE 
+${CMAKE_CURRENT_SOURCE_DIR}/*.c
+${CMAKE_CURRENT_SOURCE_DIR}/*.h)
+
 #using library
 include_directories(../generator/output/)
-add_executable(test_sdl main.c CustomFont.c)
+add_executable(test_sdl ${SRC_TREE})
 if (MINGW)
 target_link_options(test_sdl PRIVATE "-mconsole")
 endif()
